@@ -65,6 +65,7 @@ def query_item():
 @my_app.route('/update',methods=["PUT"]) #update with item from order purchase http request
 def update():
     print(request.args)
+    res=""
     item=request.args.get('item')#getting params from the request url
     rows = []
     with open("data.csv", 'r') as file:#opening file and retrieving the data
@@ -78,18 +79,22 @@ def update():
         if row[0] == item:
             title=row[1]
             stock=row[3]
-            num=int(stock)-1 #decrementing the stock for the item selected 
-            row[3]=num
-            print(row[3])
-    filename = 'data.csv'
-    with open(filename, 'w', newline="") as file:#opening the file to update data
-        csvwriter = csv.writer(file) 
-        csvwriter.writerow(header) 
-        csvwriter.writerows(rows)
+            if int(stock) == 0:
+                res=title+' is out of stock'
+            else:
+                title=row[1]
+                num=int(stock)-1 #decrementing the stock for the item selected 
+                row[3]=num
+                filename = 'data.csv'
+                with open(filename, 'w', newline="") as file:#opening the file to update data
+                    csvwriter = csv.writer(file) 
+                    csvwriter.writerow(header) 
+                    csvwriter.writerows(rows)
+                res='purchased '+title
     print(header)
     print(rows)    
 
-    return str('purchased '+title+'\n'),201 #returning successful purchase to the order server
+    return str(res+'\n'),201 #returning successful purchase to the order server
 
 
 @my_app.errorhandler(TypeError)
