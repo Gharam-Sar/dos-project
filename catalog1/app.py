@@ -130,7 +130,7 @@ def update():
     mes=""
     try:
         ip="192.168.1.105" #catalog server ip
-        port="5002" #order server port
+        port="5002" #order server port        
         URL = "http://"+ip+":"+port+"/updateCsv"  #the order server url for purchase
         PARAMS = {'item':item}
 
@@ -140,18 +140,8 @@ def update():
         print(mes)
     try:
         ip="192.168.1.105" #catalog server ip
-        port="5001" #order server port
+        port="5000" #order server port        
         URL = "http://"+ip+":"+port+"/updateCsv"  #the order server url for purchase
-        PARAMS = {'item':item}
-
-        r = requests.put(url = URL, params = PARAMS)
-        mes=r.text
-    except:
-        print(mes)
-    try:
-        ip="192.168.1.105" #catalog server ip
-        port="3000" #order server port
-        URL = "http://"+ip+":"+port+"/invalidate"  #the order server url for purchase
         PARAMS = {'item':item}
 
         r = requests.put(url = URL, params = PARAMS)
@@ -160,7 +150,20 @@ def update():
     except:
         print(mes)   
 
+    try:
+        ip="192.168.1.105" #catalog server ip
+        port="3000" #order server port
+        URL = "http://"+ip+":"+port+"/invalidate"  #the order server url for purchase
+        PARAMS = {'item':item}
+
+        r = requests.put(url = URL, params = PARAMS)
+        mes=r.text
+    except:
+        print(mes)   
+
+
     return str(res+'\n'),201 #returning successful purchase to the order server
+
 
 @my_app.route('/updateCsv',methods=["PUT"]) #update with item from order purchase http request
 def updatecsv():
